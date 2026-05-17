@@ -2,7 +2,7 @@
 
 Personal CV website — single-page, dark, industrial. Built with Next.js 14, Tailwind, shadcn/ui patterns and Framer Motion.
 
-Live: _add Vercel URL once deployed_
+Live: https://nahue-cv.vercel.app/
 
 ## Stack
 
