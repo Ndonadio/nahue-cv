@@ -2,13 +2,17 @@
 
 import { motion } from "framer-motion";
 import { ArrowDown, Mail, Linkedin } from "lucide-react";
+import Image from "next/image";
 import { cv } from "@/lib/cv-data";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 /**
  * Hero — first viewport: name, title, tagline and primary CTAs.
- * Animations stagger in on mount; layout is mobile-first.
+ * Layout: text left + circular profile photo right (desktop),
+ *         photo top + text below (mobile).
+ *
+ * Photo lives at /public/profile.jpg — swap the file to update it.
  *
  * NOTE: We render <a> tags styled with `buttonVariants()` instead of
  * <Button asChild> — that pattern requires @radix-ui/react-slot which we
@@ -32,45 +36,90 @@ export function Hero() {
       />
 
       <div className="container relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="max-w-3xl"
-        >
-          <span className="section-eyebrow">{cv.hero.location}</span>
+        <div className="flex flex-col-reverse items-center gap-12 md:flex-row md:items-center md:justify-between">
 
-          <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.05]">
-            {cv.hero.name}
-          </h1>
+          {/* ── Left column: text content ─────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="flex-1 text-center md:text-left"
+          >
+            <span className="section-eyebrow">{cv.hero.location}</span>
 
-          <p className="mt-4 text-lg md:text-xl text-accent font-mono">
-            {cv.hero.title}
-          </p>
+            <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.05]">
+              {cv.hero.name}
+            </h1>
 
-          <p className="mt-6 max-w-2xl text-base md:text-lg text-muted-foreground leading-relaxed">
-            {cv.hero.tagline}
-          </p>
+            <p className="mt-4 text-lg md:text-xl text-accent font-mono">
+              {cv.hero.title}
+            </p>
 
-          <div className="mt-10 flex flex-wrap items-center gap-3">
-            <a
-              href={`mailto:${cv.hero.email}`}
-              className={cn(buttonVariants({ variant: "primary" }))}
+            <p className="mt-6 max-w-2xl text-base md:text-lg text-muted-foreground leading-relaxed">
+              {cv.hero.tagline}
+            </p>
+
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3 md:justify-start">
+              <a
+                href={`mailto:${cv.hero.email}`}
+                className={cn(buttonVariants({ variant: "primary" }))}
+              >
+                <Mail className="h-4 w-4" />
+                Get in touch
+              </a>
+              <a
+                href={cv.hero.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(buttonVariants({ variant: "outline" }))}
+              >
+                <Linkedin className="h-4 w-4" />
+                LinkedIn
+              </a>
+            </div>
+          </motion.div>
+
+          {/* ── Right column: profile photo ───────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
+            className="flex-shrink-0"
+          >
+            {/*
+             * Outer ring: electric-blue glow via box-shadow on a wrapper div.
+             * The ring pulses subtly via the CSS animation defined in globals.css.
+             */}
+            <div
+              className="profile-ring"
+              style={{
+                padding: "3px",
+                borderRadius: "9999px",
+                background: "linear-gradient(135deg, hsl(var(--accent)), hsl(217 100% 40%))",
+                boxShadow: "0 0 32px hsl(217 100% 60% / 0.35), 0 0 64px hsl(217 100% 60% / 0.15)",
+              }}
             >
-              <Mail className="h-4 w-4" />
-              Get in touch
-            </a>
-            <a
-              href={cv.hero.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(buttonVariants({ variant: "outline" }))}
-            >
-              <Linkedin className="h-4 w-4" />
-              LinkedIn
-            </a>
-          </div>
-        </motion.div>
+              <div
+                className="relative w-[220px] h-[220px] md:w-[260px] md:h-[260px] rounded-full overflow-hidden bg-[#111]"
+              >
+                <Image
+                  src="/profile.jpg"
+                  alt="Nahuel Donadio"
+                  width={260}
+                  height={260}
+                  priority
+                  style={{
+                    objectFit: "cover",
+                    objectPosition: "center top",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </div>
+            </div>
+          </motion.div>
+
+        </div>
 
         {/* Scroll indicator — small visual hint, hidden on small screens */}
         <motion.a
