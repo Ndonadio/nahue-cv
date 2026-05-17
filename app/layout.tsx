@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cv } from "@/lib/cv-data";
+import { Analytics } from "@vercel/analytics/next";
 
 // Load the two fonts via next/font for zero CLS and optimal loading.
 const inter = Inter({
@@ -47,7 +48,10 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrains.variable} dark`}
       suppressHydrationWarning
     >
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
