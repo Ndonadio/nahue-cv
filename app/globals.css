@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Design tokens — industrial dark palette.
+   Pure black-ish background, dark gray surfaces, electric-blue accent.
+   --------------------------------------------------------------------------- */
+@layer base {
+  :root {
+    /* HSL values — Tailwind reads them via `hsl(var(--token))` */
+    --background: 0 0% 4%;          /* #0a0a0a */
+    --foreground: 0 0% 96%;         /* near white */
+    --surface: 0 0% 7%;             /* #111 */
+    --surface-elevated: 0 0% 10%;   /* #1a1a1a */
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 60%;
+    --border: 0 0% 18%;
+    --accent: 217 100% 60%;         /* electric blue #3D7BFF-ish */
+    --accent-foreground: 0 0% 100%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    /* Subtle vignette / grid for industrial feel */
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(217 100% 60% / 0.08), transparent 60%);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  ::selection {
+    @apply bg-accent/30 text-foreground;
+  }
+}
+
+/* Custom scrollbar — keep it minimal */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+
+/* Reusable section padding — keeps spacing consistent across the site */
+.section {
+  @apply py-20 md:py-28 scroll-mt-20;
+}
+
+/* Hairline divider above section headers */
+.section-eyebrow {
+  @apply inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono;
+}
+.section-eyebrow::before {
+  content: "";
+  @apply block h-px w-8 bg-accent;
+}
